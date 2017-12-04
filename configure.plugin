@@ -1,0 +1,23 @@
+#!/bin/sh
+#
+
+plugin_usage()
+{
+    cat <<EOF
+    --with-ssdeep=DIR      Path to ssdeep
+EOF
+}
+
+plugin_option()
+{
+    case "$1" in
+        --with-ssdeep=*)
+            append_cache_entry SSDEEP_INCLUDE_DIR PATH $optarg
+            return 0
+            ;;
+
+        *)
+            return 1;
+            ;;
+    esac
+}

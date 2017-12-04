@@ -1,0 +1,20 @@
+
+JGras::FuzzyHashing
+============
+
+This plugin aims at integrating fuzzy hashing into Bro and is under development.
+
+Installation
+------------
+
+Bro Package Manager
+```````````````````
+
+Manual Install
+``````````````
+
+Usage
+-----
+
+Notes
+-----

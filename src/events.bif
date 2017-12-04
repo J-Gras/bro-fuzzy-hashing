@@ -1,0 +1,8 @@
+## This event is generated each time the ssdeep plugin generates a
+## context triggered piecewise hash (CTPH) of the file contents.
+##
+## f: The file.
+##
+## hash: <<TODO>> The result of the hashing.
+##
+event file_hash_ssdeep%(f: fa_file, msg: string%);
