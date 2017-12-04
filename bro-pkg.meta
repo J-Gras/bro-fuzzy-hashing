@@ -1,7 +1,7 @@
 [package]
-description = This plugin provides ssdeep fuzzy hashing for Bro.
+description = This plugin provides fuzzy hashing for Bro.
 tags = bro plugin
-plugin_dir = build/JGras_SSDeep.tgz
+plugin_dir = build/JGras_FuzzyHashing.tgz
 build_command = ./configure --bro-dist=%(bro_dist)s && make
 test_command = cd tests && btest -d
 depends =

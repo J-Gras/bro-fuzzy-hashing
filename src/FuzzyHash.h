@@ -1,38 +1,27 @@
 // See the file "COPYING" in the main distribution directory for copyright.
 
-#ifndef BRO_PLUGIN_JGRAS_SSDEEP_ANALYZER_H
-#define BRO_PLUGIN_JGRAS_SSDEEP_ANALYZER_H
+#ifndef BRO_PLUGIN_JGRAS_FUZZYHASHING_ANALYZER_H
+#define BRO_PLUGIN_JGRAS_FUZZYHASHING_ANALYZER_H
 
 #include <Val.h>
 #include <file_analysis/Analyzer.h>
 
-//extern "C" {
-#include <fuzzy.h>
-//}
+#include "FuzzyHashVal.h"
+#include "events.bif.h"
 
 namespace plugin {
-namespace JGras_SSDeep {
-
+namespace JGras_FuzzyHashing {
 
 /**
- * An analyzer to produce context triggered piecewise hashes (CTPH) of file contents.
+ * An analyzer to produce a hash of file contents.
  */
-class SSDeep : public file_analysis::Analyzer {
+class FuzzyHash : public file_analysis::Analyzer {
 public:
 
 	/**
 	 * Destructor.
 	 */
-	virtual ~SSDeep();
-
-	/**
-	 * Create a new instance of the ssdeep hashing file analyzer.
-	 * @param args the \c AnalyzerArgs value which represents the analyzer.
-	 * @param file the file to which the analyzer will be attached.
-	 * @return the new ssdeep analyzer instance or a null pointer if there's no
-	 *         handler for the "file_hash_ssdeep" event.
-	 */
-	static file_analysis::Analyzer* Instantiate(RecordVal* args, file_analysis::File* file);
+	virtual ~FuzzyHash();
 
 	/**
 	 * Incrementally hash next chunk of file contents.
@@ -67,18 +56,47 @@ protected:
 	 * @param hv specific hash calculator object.
 	 * @param kind human readable name of the hash algorithm to use.
 	 */
-	SSDeep(RecordVal* args, file_analysis::File* file);
+	FuzzyHash(RecordVal* args, file_analysis::File* file, FuzzyHashVal* hv, const char* kind);
 
 	/**
 	 * If some file contents have been seen, finalizes the hash of them and
-	 * raises the "file_hash" event with the results.
+	 * raises the "file_fuzzy_hash" event with the results.
 	 */
 	void Finalize();
 
 private:
-	//HashVal* hash;
+	FuzzyHashVal* fuzzy_hash;
 	bool fed;
-	fuzzy_state* state;
+	const char* kind;
+};
+
+/**
+ * An analyzer to produce context triggered piecewise hashes (CTPH) of file contents
+ * using the ssdeep library.
+ */
+class SSDeep : public FuzzyHash {
+public:
+
+	/**
+	 * Create a new instance of the ssdeep hashing file analyzer.
+	 * @param args the \c AnalyzerArgs value which represents the analyzer.
+	 * @param file the file to which the analyzer will be attached.
+	 * @return the new ssdeep analyzer instance or a null pointer if there's no
+	 *         handler for the "file_hash" event.
+	 */
+	static file_analysis::Analyzer* Instantiate(RecordVal* args, file_analysis::File* file)
+		{ return file_fuzzy_hash ? new SSDeep(args, file) : 0; }
+
+protected:
+
+	/**
+	 * Constructor.
+	 * @param args the \c AnalyzerArgs value which represents the analyzer.
+	 * @param file the file to which the analyzer will be attached.
+	 */
+	SSDeep(RecordVal* args, file_analysis::File* file)
+		: FuzzyHash(args, file, new SSDeepVal(), "ssdeep")
+		{}
 };
 
 }

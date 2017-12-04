@@ -1,8 +1,10 @@
-## This event is generated each time the ssdeep plugin generates a
-## context triggered piecewise hash (CTPH) of the file contents.
+## This event is generated each time the fuzzy hashing plugin
+## generates a hash of file contents.
 ##
 ## f: The file.
 ##
-## hash: <<TODO>> The result of the hashing.
+## kind: The type of fuzzy hashing algorithm.
 ##
-event file_hash_ssdeep%(f: fa_file, msg: string%);
+## hash: The result of the fuzzy hashing.
+##
+event file_fuzzy_hash%(f: fa_file, kind: string, hash: string%);

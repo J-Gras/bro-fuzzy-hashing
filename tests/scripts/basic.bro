@@ -8,7 +8,7 @@ event file_sniff(f: fa_file, meta: fa_metadata)
     Files::add_analyzer(f, Files::ANALYZER_SSDEEP);
     }
 
-event file_hash_ssdeep(f: fa_file, hash: string)
+event file_fuzzy_hash(f: fa_file, kind: string, hash: string)
     {
-    print "file_hash", f$id, hash;
+    print "file_hash", f$id, kind, hash;
     }
