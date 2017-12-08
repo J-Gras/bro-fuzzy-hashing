@@ -1,2 +1,2 @@
-# @TEST-EXEC: bro -NN Bro::SSDeep >output
+# @TEST-EXEC: bro -NN JGras::FuzzyHashing >output
 # @TEST-EXEC: btest-diff output
