@@ -1,4 +1,7 @@
 JGras::FuzzyHashing - Fuzzy hashing support for Bro (dynamic, version 0.2)
     [File Analyzer] SSDeep (ANALYZER_SSDEEP)
     [Event] file_fuzzy_hash
+    [Function] ssdeep_hash_init
+    [Function] ssdeep_hash_update
+    [Function] ssdeep_hash_finish
 

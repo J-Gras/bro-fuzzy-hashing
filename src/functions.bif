@@ -1,0 +1,51 @@
+%%{
+#include "FuzzyHashVal.h"
+
+using namespace plugin::JGras_FuzzyHashing;
+%%}
+
+## Constructs an ssdeep handle to enable incremental hash computation. You can
+## feed data to the returned opaque value with :bro:id:`ssdeep_hash_update` and
+## eventually need to call :bro:id:`ssdeep_hash_finish` to finish the
+## computation and get the hash digest.
+##
+## Returns: The opaque handle associated with this hash computation.
+##
+## .. bro:see:: ssdeep_hash_update ssdeep_hash_finish
+##
+function ssdeep_hash_init%(%): opaque of ssdeep
+	%{
+	FuzzyHashVal* digest = new SSDeepVal();
+	digest->Init();
+	return digest;
+	%}
+
+## Updates the ssdeep value associated with a given index. It is required to
+## call :bro:id:`ssdeep_hash_init` once before calling this function.
+##
+## handle: The opaque handle associated with this hash computation.
+##
+## data: The data to add to the hash computation.
+##
+## Returns: True on success.
+##
+## .. bro:see:: ssdeep_hash_init ssdeep_hash_finish
+##
+function ssdeep_hash_update%(handle: opaque of ssdeep, data: string%): bool
+	%{
+	bool rc = static_cast<FuzzyHashVal*>(handle)->Feed(data->Bytes(), data->Len());
+	return new Val(rc, TYPE_BOOL);
+	%}
+
+## Returns the final ssdeep digest of an incremental hash computation.
+##
+## handle: The opaque handle associated with this hash computation.
+##
+## Returns: The hash value associated with the computation of *handle*.
+##
+## .. bro:see:: ssdeep_hash_init ssdeep_hash_update
+##
+function ssdeep_hash_finish%(handle: opaque of ssdeep%): string
+	%{
+	return static_cast<FuzzyHashVal*>(handle)->Get();
+	%}
