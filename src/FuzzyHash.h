@@ -38,12 +38,12 @@ public:
 	virtual bool EndOfFile();
 
 	/**
-	 * Missing data can't be handled, so just indicate the this analyzer should
-	 * be removed from receiving further data.  The hash will not be finalized.
+	 * Missing data can be ignored due to the nature of fuzzy hashing. Depending
+	 * on the underlying algorithm, the information about how many data has been
+	 * skipped might be used to improve the accuracy of the hash.
 	 * @param offset byte offset in file at which missing chunk starts.
 	 * @param len number of missing bytes.
-	 * @return always false so analyzer will detach from file.
-	 * TODO!
+	 * @return always true so the analyzer will ignore missing data.
 	 */
 	virtual bool Undelivered(uint64 offset, uint64 len);
 

@@ -41,7 +41,7 @@ bool FuzzyHash::EndOfFile()
 
 bool FuzzyHash::Undelivered(uint64 offset, uint64 len)
 	{
-	return false;
+	return true;
 	}
 
 void FuzzyHash::Finalize()
