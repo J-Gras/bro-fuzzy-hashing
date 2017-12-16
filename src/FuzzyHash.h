@@ -99,6 +99,34 @@ protected:
 		{}
 };
 
+/**
+ * An analyzer to produce Trend Micro Locality Sensitive Hashes (TLSH) of file contents.
+ */
+class TLSH : public FuzzyHash {
+public:
+
+	/**
+	 * Create a new instance of the TLSH hashing file analyzer.
+	 * @param args the \c AnalyzerArgs value which represents the analyzer.
+	 * @param file the file to which the analyzer will be attached.
+	 * @return the new TLSH analyzer instance or a null pointer if there's no
+	 *         handler for the "file_hash" event.
+	 */
+	static file_analysis::Analyzer* Instantiate(RecordVal* args, file_analysis::File* file)
+		{ return file_fuzzy_hash ? new TLSH(args, file) : 0; }
+
+protected:
+
+	/**
+	 * Constructor.
+	 * @param args the \c AnalyzerArgs value which represents the analyzer.
+	 * @param file the file to which the analyzer will be attached.
+	 */
+	TLSH(RecordVal* args, file_analysis::File* file)
+		: FuzzyHash(args, file, new TLSHVal(), "tlsh")
+		{}
+};
+
 }
 }
 

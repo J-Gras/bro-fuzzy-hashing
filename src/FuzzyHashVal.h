@@ -6,6 +6,7 @@
 #include <OpaqueVal.h>
 
 #include "fuzzy.h"
+#include "tlsh/tlsh.h"
 
 namespace plugin {
 namespace JGras_FuzzyHashing {
@@ -36,6 +37,26 @@ protected:
 
 private:
 	fuzzy_state* state;
+};
+
+class TLSHVal : public FuzzyHashVal {
+public:
+	// TODO: static functionality?
+	//static void digest(val_list& vlist, u_char result[MD5_DIGEST_LENGTH]);
+
+	TLSHVal();
+
+protected:
+	friend class Val;
+
+	virtual bool DoInit() override;
+	virtual bool DoFeed(const void* data, size_t size) override;
+	virtual StringVal* DoGet() override;
+
+	//DECLARE_SERIAL(TLSHVal);
+
+private:
+	Tlsh* tlsh;
 };
 
 }

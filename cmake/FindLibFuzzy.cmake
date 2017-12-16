@@ -3,9 +3,8 @@
 # Variables used by this module, they can change the default behaviour and need
 # to be set before calling find_package:
 #
-#  SSDEEP_INCLUDE_DIR     Set this variable to the root directory of
-#                         ssdeep if the module has problems finding
-#                         the proper path.
+#  SSDEEP_INCLUDE_DIR     Set this variable to the root directory of ssdeep if
+#                         the module has problems finding the proper path.
 #
 # Variables defined by this module:
 #

@@ -118,3 +118,35 @@ bool SSDeepVal::DoUnserialize(UnserialInfo* info)
 	return true;
 }
 */
+
+static OpaqueType* tlsh_type = new OpaqueType("tlsh");
+
+TLSHVal::TLSHVal() : FuzzyHashVal(tlsh_type)
+	{
+	}
+
+bool TLSHVal::DoInit()
+	{
+	assert(! IsValid());
+	tlsh = new Tlsh();
+	return tlsh != NULL;
+	}
+
+bool TLSHVal::DoFeed(const void* data, size_t size)
+	{
+	if ( ! IsValid() )
+		return false;
+
+	tlsh->update(static_cast<const u_char*>(data), size);
+	return IsValid();
+	}
+
+StringVal* TLSHVal::DoGet()
+	{
+	if ( ! IsValid() )
+		return new StringVal("");
+
+	tlsh->final();
+	const char* hash = tlsh->getHash();
+	return new StringVal(hash);
+	}

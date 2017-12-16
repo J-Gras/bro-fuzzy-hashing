@@ -7,14 +7,18 @@ type Line: record {
 };
 
 global ssdeep_handle: opaque of ssdeep;
+global tlsh_handle: opaque of tlsh;
 
 event read_event(description: Input::EventDescription, t: Input::Event, line: string) {
 	ssdeep_hash_update(ssdeep_handle, fmt("%s\n", line));
+	tlsh_hash_update(tlsh_handle, fmt("%s\n", line));
 }
 
 event bro_init()
 	{
 	ssdeep_handle = ssdeep_hash_init();
+	tlsh_handle = tlsh_hash_init();
+
 	Input::add_event([$source="CHANGES.bro-aux.txt",
 		$reader=Input::READER_RAW,
 		$mode=Input::MANUAL,
@@ -32,4 +36,7 @@ event Input::end_of_data(name: string, source:string)
 
 	local ssdeep_hash = ssdeep_hash_finish(ssdeep_handle);
 	print fmt("ssdeep = %s", ssdeep_hash);
+
+	local tlsh_hash = tlsh_hash_finish(tlsh_handle);
+	print fmt("tlsh   = %s", tlsh_hash);
 	}
