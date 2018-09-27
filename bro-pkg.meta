@@ -1,6 +1,6 @@
 [package]
 description = This plugin provides fuzzy hashing for Bro.
-tags = bro plugin
+tags = fuzzy hashing, ssdeep, TLSH
 plugin_dir = build/JGras_FuzzyHashing.tgz
 build_command = ./configure --bro-dist=%(bro_dist)s && make
 test_command = cd tests && btest -d

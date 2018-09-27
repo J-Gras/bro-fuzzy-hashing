@@ -7,7 +7,7 @@ This plugin aims at integrating fuzzy hashing into Bro and is under development.
 
 ## Installation
 
-The Plugin is based on libraries for `ssdeep` (libfuzzy) and `TLSH`. Make sure to install both libraries before installing the plugin.
+The Plugin is based on libraries for *ssdeep (libfuzzy)* and *TLSH*. Make sure to install both libraries before installing the plugin.
 
 ### Bro Package Manager
 
