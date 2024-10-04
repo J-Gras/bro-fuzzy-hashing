@@ -1,5 +1,8 @@
 #!/bin/sh
 #
+# Hooks to add custom options to the configure script.
+# Automated template updates will leave this file untouched.
+#
 
 plugin_usage()
 {
@@ -13,12 +16,12 @@ plugin_option()
 {
     case "$1" in
         --with-ssdeep=*)
-            append_cache_entry SSDEEP_INCLUDE_DIR PATH $optarg
+            append_cache_entry SSDEEP_ROOT_DIR PATH $optarg
             return 0
             ;;
 
         --with-tlsh=*)
-            append_cache_entry TLSH_INCLUDE_DIR PATH $optarg
+            append_cache_entry TLSH_ROOT_DIR PATH $optarg
             return 0
             ;;
 
@@ -26,4 +29,9 @@ plugin_option()
             return 1;
             ;;
     esac
+}
+
+plugin_addl()
+{
+    : # Do nothing
 }

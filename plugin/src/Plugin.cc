@@ -1,4 +1,5 @@
 
+#include "config.h"
 #include "Plugin.h"
 
 #include "FuzzyHash.h"
@@ -17,7 +18,8 @@ plugin::Configuration Plugin::Configure()
 	plugin::Configuration config;
 	config.name = "JGras::FuzzyHashing";
 	config.description = "Fuzzy hashing support for Bro";
-	config.version.major = 0;
-	config.version.minor = 3;
+	config.version.major = VERSION_MAJOR;
+	config.version.minor = VERSION_MINOR;
+	config.version.patch = VERSION_PATCH;
 	return config;
 	}

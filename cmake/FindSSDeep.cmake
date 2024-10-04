@@ -3,8 +3,8 @@
 # Variables used by this module, they can change the default behaviour and need
 # to be set before calling find_package:
 #
-#  SSDEEP_INCLUDE_DIR     Set this variable to the root directory of ssdeep if
-#                         the module has problems finding the proper path.
+#  SSDEEP_ROOT_DIR     Set this variable to the root directory of ssdeep if
+#                      the module has problems finding the proper path.
 #
 # Variables defined by this module:
 #
@@ -13,13 +13,13 @@
 #  SSDEEP_INCLUDE_DIR    The location of ssdeep headers
 
 find_library(SSDEEP_LIBRARY
-    NAMES libfuzzy.so
-    HINTS lib64
+    NAMES fuzzy
+    HINTS ${SSDEEP_ROOT_DIR}/lib ${SSDEEP_ROOT_DIR}/lib64
 )
 
 find_path(SSDEEP_INCLUDE_DIR
     NAMES fuzzy.h
-    HINTS include
+    HINTS ${SSDEEP_ROOT_DIR}/include
 )
 
 include(FindPackageHandleStandardArgs)
