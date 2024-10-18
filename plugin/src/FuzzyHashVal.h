@@ -1,22 +1,18 @@
 // See the file "COPYING" in the main distribution directory for copyright.
+#pragma once
 
-#ifndef BRO_PLUGIN_JGRAS_FUZZYHASHING_VAL_H
-#define BRO_PLUGIN_JGRAS_FUZZYHASHING_VAL_H
+#include <zeek/OpaqueVal.h>
 
-#include <OpaqueVal.h>
+// Forward declarations
+struct fuzzy_state;
+class Tlsh;
 
-#include "fuzzy.h"
-#include "tlsh/tlsh.h"
+namespace plugin::JGras_FuzzyHashing {
 
-namespace plugin {
-namespace JGras_FuzzyHashing {
-
-class FuzzyHashVal : public HashVal {
+class FuzzyHashVal : public zeek::HashVal {
 protected:
-	FuzzyHashVal() { };
-	FuzzyHashVal(OpaqueType* t);
-
-	//DECLARE_SERIAL(FuzzyHashVal);
+	//FuzzyHashVal() { };
+	FuzzyHashVal(zeek::OpaqueTypePtr t);
 };
 
 class SSDeepVal : public FuzzyHashVal {
@@ -31,9 +27,9 @@ protected:
 
 	virtual bool DoInit() override;
 	virtual bool DoFeed(const void* data, size_t size) override;
-	virtual StringVal* DoGet() override;
+	virtual zeek::StringValPtr DoGet() override;
 
-	//DECLARE_SERIAL(SSDeepVal);
+	DECLARE_OPAQUE_VALUE_DATA(SSDeepVal)
 
 private:
 	fuzzy_state* state;
@@ -51,15 +47,12 @@ protected:
 
 	virtual bool DoInit() override;
 	virtual bool DoFeed(const void* data, size_t size) override;
-	virtual StringVal* DoGet() override;
+	virtual zeek::StringValPtr DoGet() override;
 
-	//DECLARE_SERIAL(TLSHVal);
+	DECLARE_OPAQUE_VALUE_DATA(TLSHVal)
 
 private:
 	Tlsh* tlsh;
 };
 
 }
-}
-
-#endif

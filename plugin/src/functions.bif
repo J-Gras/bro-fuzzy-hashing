@@ -15,9 +15,9 @@ using namespace plugin::JGras_FuzzyHashing;
 ##
 function ssdeep_hash_init%(%): opaque of ssdeep
 	%{
-	FuzzyHashVal* digest = new SSDeepVal();
+	auto digest = zeek::make_intrusive<SSDeepVal>();
 	digest->Init();
-	return digest;
+	return std::move(digest);
 	%}
 
 ## Updates the ssdeep value associated with a given index. It is required to
@@ -34,7 +34,7 @@ function ssdeep_hash_init%(%): opaque of ssdeep
 function ssdeep_hash_update%(handle: opaque of ssdeep, data: string%): bool
 	%{
 	bool rc = static_cast<FuzzyHashVal*>(handle)->Feed(data->Bytes(), data->Len());
-	return new Val(rc, TYPE_BOOL);
+	return zeek::val_mgr->Bool(rc);
 	%}
 
 ## Returns the final ssdeep digest of an incremental hash computation.
@@ -61,9 +61,9 @@ function ssdeep_hash_finish%(handle: opaque of ssdeep%): string
 ##
 function tlsh_hash_init%(%): opaque of tlsh
 	%{
-	FuzzyHashVal* digest = new TLSHVal();
+	auto digest = zeek::make_intrusive<TLSHVal>();
 	digest->Init();
-	return digest;
+	return std::move(digest);
 	%}
 
 ## Updates the tlsh value associated with a given index. It is required to
@@ -80,7 +80,7 @@ function tlsh_hash_init%(%): opaque of tlsh
 function tlsh_hash_update%(handle: opaque of tlsh, data: string%): bool
 	%{
 	bool rc = static_cast<FuzzyHashVal*>(handle)->Feed(data->Bytes(), data->Len());
-	return new Val(rc, TYPE_BOOL);
+	return zeek::val_mgr->Bool(rc);
 	%}
 
 ## Returns the final tlsh digest of an incremental hash computation.

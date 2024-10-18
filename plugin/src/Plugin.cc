@@ -1,23 +1,23 @@
-
 #include "config.h"
 #include "Plugin.h"
-
 #include "FuzzyHash.h"
 
-namespace plugin { namespace JGras_FuzzyHashing { Plugin plugin; } }
+#include <zeek/file_analysis/Component.h>
 
-using namespace plugin::JGras_FuzzyHashing;
+namespace zeek::plugin::JGras_FuzzyHashing { Plugin plugin; }
 
-plugin::Configuration Plugin::Configure()
+using namespace zeek::plugin::JGras_FuzzyHashing;
+
+zeek::plugin::Configuration Plugin::Configure()
 	{
-	AddComponent(new ::file_analysis::Component("SSDeep",
+	AddComponent(new zeek::file_analysis::Component("SSDeep",
 		::plugin::JGras_FuzzyHashing::SSDeep::Instantiate));
-	AddComponent(new ::file_analysis::Component("TLSH",
+	AddComponent(new zeek::file_analysis::Component("TLSH",
 		::plugin::JGras_FuzzyHashing::TLSH::Instantiate));
 
-	plugin::Configuration config;
+	zeek::plugin::Configuration config;
 	config.name = "JGras::FuzzyHashing";
-	config.description = "Fuzzy hashing support for Bro";
+	config.description = "Fuzzy hashing support for Zeek";
 	config.version.major = VERSION_MAJOR;
 	config.version.minor = VERSION_MINOR;
 	config.version.patch = VERSION_PATCH;

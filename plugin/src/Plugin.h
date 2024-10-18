@@ -1,22 +1,18 @@
+#pragma once
 
-#ifndef BRO_PLUGIN_JGRAS_FUZZYHASHING
-#define BRO_PLUGIN_JGRAS_FUZZYHASHING
+#include <zeek/plugin/Plugin.h>
 
-#include <plugin/Plugin.h>
-
-namespace plugin {
+namespace zeek::plugin {
 namespace JGras_FuzzyHashing {
 
-class Plugin : public ::plugin::Plugin
+class Plugin : public zeek::plugin::Plugin
 {
 protected:
-	// Overridden from plugin::Plugin.
-	virtual plugin::Configuration Configure();
+	// Overridden from zeek::plugin::Plugin.
+	zeek::plugin::Configuration Configure() override;
 };
 
 extern Plugin plugin;
 
 }
 }
-
-#endif

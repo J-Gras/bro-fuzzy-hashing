@@ -4,9 +4,14 @@
 
 #include "FuzzyHashVal.h"
 
-using namespace plugin::JGras_FuzzyHashing;
+#include <fuzzy.h>
+#include <tlsh.h>
 
-FuzzyHashVal::FuzzyHashVal(OpaqueType* t) : HashVal(t)
+namespace plugin::JGras_FuzzyHashing {
+
+using namespace zeek;
+
+FuzzyHashVal::FuzzyHashVal(OpaqueTypePtr t) : HashVal(std::move(t))
 	{
 	}
 
@@ -26,7 +31,7 @@ bool FuzzyHashVal::DoUnserialize(UnserialInfo* info)
 	}
 */
 
-static OpaqueType* ssdeep_type = new OpaqueType("ssdeep");
+static OpaqueTypePtr ssdeep_type = make_intrusive<OpaqueType>("ssdeep");
 
 SSDeepVal::SSDeepVal() : FuzzyHashVal(ssdeep_type)
 	{
@@ -48,17 +53,17 @@ bool SSDeepVal::DoFeed(const void* data, size_t size)
 	return success;
 	}
 
-StringVal* SSDeepVal::DoGet()
+StringValPtr SSDeepVal::DoGet()
 	{
 	if ( ! IsValid() )
-		return new StringVal("");
+		return val_mgr->EmptyString();
 
 	char hash[FUZZY_MAX_RESULT] = "";
 	if (fuzzy_digest(state, hash, 0) != 0 )
-		return new StringVal("");
+		return val_mgr->EmptyString();
 
 	fuzzy_free(state);
-	return new StringVal(hash);
+	return make_intrusive<StringVal>(hash);
 	}
 
 /*
@@ -119,7 +124,7 @@ bool SSDeepVal::DoUnserialize(UnserialInfo* info)
 }
 */
 
-static OpaqueType* tlsh_type = new OpaqueType("tlsh");
+static OpaqueTypePtr tlsh_type = make_intrusive<OpaqueType>("tlsh");
 
 TLSHVal::TLSHVal() : FuzzyHashVal(tlsh_type)
 	{
@@ -141,12 +146,13 @@ bool TLSHVal::DoFeed(const void* data, size_t size)
 	return IsValid();
 	}
 
-StringVal* TLSHVal::DoGet()
+StringValPtr TLSHVal::DoGet()
 	{
 	if ( ! IsValid() )
-		return new StringVal("");
+		return val_mgr->EmptyString();
 
 	tlsh->final();
 	const char* hash = tlsh->getHash();
-	return new StringVal(hash);
+	return make_intrusive<StringVal>(hash);
 	}
+}

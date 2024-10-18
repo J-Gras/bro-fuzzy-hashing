@@ -1,21 +1,19 @@
 // See the file "COPYING" in the main distribution directory for copyright.
+#pragma once
 
-#ifndef BRO_PLUGIN_JGRAS_FUZZYHASHING_ANALYZER_H
-#define BRO_PLUGIN_JGRAS_FUZZYHASHING_ANALYZER_H
-
-#include <Val.h>
-#include <file_analysis/Analyzer.h>
+#include <zeek/Val.h>
+#include <zeek/file_analysis/Analyzer.h>
+#include <zeek/file_analysis/File.h>
 
 #include "FuzzyHashVal.h"
 #include "events.bif.h"
 
-namespace plugin {
-namespace JGras_FuzzyHashing {
+namespace plugin::JGras_FuzzyHashing {
 
 /**
  * An analyzer to produce a hash of file contents.
  */
-class FuzzyHash : public file_analysis::Analyzer {
+class FuzzyHash : public zeek::file_analysis::Analyzer {
 public:
 
 	/**
@@ -29,7 +27,7 @@ public:
 	 * @param len number of bytes in the data chunk.
 	 * @return false if the digest is in an invalid state, else true.
 	 */
-	virtual bool DeliverStream(const u_char* data, uint64 len);
+	virtual bool DeliverStream(const u_char* data, uint64_t len);
 
 	/**
 	 * Finalizes the hash and raises a "file_hash" event.
@@ -45,7 +43,7 @@ public:
 	 * @param len number of missing bytes.
 	 * @return always true so the analyzer will ignore missing data.
 	 */
-	virtual bool Undelivered(uint64 offset, uint64 len);
+	virtual bool Undelivered(uint64_t offset, uint64_t len);
 
 protected:
 
@@ -56,7 +54,7 @@ protected:
 	 * @param hv specific hash calculator object.
 	 * @param kind human readable name of the hash algorithm to use.
 	 */
-	FuzzyHash(RecordVal* args, file_analysis::File* file, FuzzyHashVal* hv, const char* kind);
+	FuzzyHash(zeek::RecordValPtr args, zeek::file_analysis::File* file, FuzzyHashVal* hv, zeek::StringValPtr kind);
 
 	/**
 	 * If some file contents have been seen, finalizes the hash of them and
@@ -67,7 +65,7 @@ protected:
 private:
 	FuzzyHashVal* fuzzy_hash;
 	bool fed;
-	const char* kind;
+	zeek::StringValPtr kind;
 };
 
 /**
@@ -84,8 +82,8 @@ public:
 	 * @return the new ssdeep analyzer instance or a null pointer if there's no
 	 *         handler for the "file_hash" event.
 	 */
-	static file_analysis::Analyzer* Instantiate(RecordVal* args, file_analysis::File* file)
-		{ return file_fuzzy_hash ? new SSDeep(args, file) : 0; }
+	static zeek::file_analysis::Analyzer* Instantiate(zeek::RecordValPtr args, zeek::file_analysis::File* file)
+		{ return file_fuzzy_hash ? new SSDeep(std::move(args), file) : nullptr; }
 
 protected:
 
@@ -94,9 +92,11 @@ protected:
 	 * @param args the \c AnalyzerArgs value which represents the analyzer.
 	 * @param file the file to which the analyzer will be attached.
 	 */
-	SSDeep(RecordVal* args, file_analysis::File* file)
-		: FuzzyHash(args, file, new SSDeepVal(), "ssdeep")
+	SSDeep(zeek::RecordValPtr args, zeek::file_analysis::File* file)
+		: FuzzyHash(std::move(args), file, new SSDeepVal(), SSDeep::kind_val)
 		{}
+
+	static zeek::StringValPtr kind_val;
 };
 
 /**
@@ -112,8 +112,8 @@ public:
 	 * @return the new TLSH analyzer instance or a null pointer if there's no
 	 *         handler for the "file_hash" event.
 	 */
-	static file_analysis::Analyzer* Instantiate(RecordVal* args, file_analysis::File* file)
-		{ return file_fuzzy_hash ? new TLSH(args, file) : 0; }
+	static zeek::file_analysis::Analyzer* Instantiate(zeek::RecordValPtr args, zeek::file_analysis::File* file)
+		{ return file_fuzzy_hash ? new TLSH(std::move(args), file) : nullptr; }
 
 protected:
 
@@ -122,12 +122,11 @@ protected:
 	 * @param args the \c AnalyzerArgs value which represents the analyzer.
 	 * @param file the file to which the analyzer will be attached.
 	 */
-	TLSH(RecordVal* args, file_analysis::File* file)
-		: FuzzyHash(args, file, new TLSHVal(), "tlsh")
+	TLSH(zeek::RecordValPtr args, zeek::file_analysis::File* file)
+		: FuzzyHash(std::move(args), file, new TLSHVal(), TLSH::kind_val)
 		{}
+
+	static zeek::StringValPtr kind_val;
 };
 
 }
-}
-
-#endif
