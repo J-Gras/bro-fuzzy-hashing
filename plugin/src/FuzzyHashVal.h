@@ -25,9 +25,9 @@ public:
 protected:
 	friend class Val;
 
-	virtual bool DoInit() override;
-	virtual bool DoFeed(const void* data, size_t size) override;
-	virtual zeek::StringValPtr DoGet() override;
+	bool DoInit() override;
+	bool DoFeed(const void* data, size_t size) override;
+	zeek::StringValPtr DoGet() override;
 
 	DECLARE_OPAQUE_VALUE_DATA(SSDeepVal)
 
@@ -45,9 +45,9 @@ public:
 protected:
 	friend class Val;
 
-	virtual bool DoInit() override;
-	virtual bool DoFeed(const void* data, size_t size) override;
-	virtual zeek::StringValPtr DoGet() override;
+	bool DoInit() override;
+	bool DoFeed(const void* data, size_t size) override;
+	zeek::StringValPtr DoGet() override;
 
 	DECLARE_OPAQUE_VALUE_DATA(TLSHVal)
 

@@ -4,6 +4,8 @@
 
 #include "FuzzyHashVal.h"
 
+#include <zeek/broker/Data.h>
+
 #include <fuzzy.h>
 #include <tlsh.h>
 
@@ -14,22 +16,6 @@ using namespace zeek;
 FuzzyHashVal::FuzzyHashVal(OpaqueTypePtr t) : HashVal(std::move(t))
 	{
 	}
-
-/*
-IMPLEMENT_SERIAL(FuzzyHashVal, SER_FUZZY_HASH_VAL);
-
-bool FuzzyHashVal::DoSerialize(SerialInfo* info) const
-	{
-	DO_SERIALIZE(SER_FUZZY_HASH_VAL, OpaqueVal);
-	return SERIALIZE(valid);
-	}
-
-bool FuzzyHashVal::DoUnserialize(UnserialInfo* info)
-	{
-	DO_UNSERIALIZE(OpaqueVal);
-	return UNSERIALIZE(&valid);
-	}
-*/
 
 static OpaqueTypePtr ssdeep_type = make_intrusive<OpaqueType>("ssdeep");
 
@@ -66,63 +52,17 @@ StringValPtr SSDeepVal::DoGet()
 	return make_intrusive<StringVal>(hash);
 	}
 
-/*
-IMPLEMENT_SERIAL(SSDeepVal, SER_SSDEEP_VAL);
+IMPLEMENT_OPAQUE_VALUE(SSDeepVal)
 
-bool SSDeepVal::DoSerialize(SerialInfo* info) const
-	{
-	DO_SERIALIZE(SER_SSDEEP_VAL, HashVal);
-
-	if ( ! IsValid() )
-		return true;
-
-	if ( ! (SERIALIZE(ctx.A) &&
-		SERIALIZE(ctx.B) &&
-		SERIALIZE(ctx.C) &&
-		SERIALIZE(ctx.D) &&
-		SERIALIZE(ctx.Nl) &&
-		SERIALIZE(ctx.Nh)) )
-		return false;
-
-	for ( int i = 0; i < MD5_LBLOCK; ++i )
-		{
-		if ( ! SERIALIZE(ctx.data[i]) )
-			return false;
-		}
-
-	if ( ! SERIALIZE(ctx.num) )
-		return false;
-
-	return true;
-	}
-
-bool SSDeepVal::DoUnserialize(UnserialInfo* info)
-	{
-	DO_UNSERIALIZE(FuzzyHashVal);
-
-	if ( ! IsValid() )
-		return true;
-
-	if ( ! (UNSERIALIZE(&ctx.A) &&
-		UNSERIALIZE(&ctx.B) &&
-		UNSERIALIZE(&ctx.C) &&
-		UNSERIALIZE(&ctx.D) &&
-		UNSERIALIZE(&ctx.Nl) &&
-		UNSERIALIZE(&ctx.Nh)) )
-		return false;
-
-	for ( int i = 0; i < MD5_LBLOCK; ++i )
-		{
-		if ( ! UNSERIALIZE(&ctx.data[i]) )
-			return false;
-		}
-
-	if ( ! UNSERIALIZE(&ctx.num) )
-		return false;
-
-	return true;
+std::optional<BrokerData> SSDeepVal::DoSerializeData() const {
+	//TODO: Implement serialization
+	return std::nullopt;
 }
-*/
+
+bool SSDeepVal::DoUnserializeData(BrokerDataView) {
+	//TODO: Impelment deserialization
+	return false;
+}
 
 static OpaqueTypePtr tlsh_type = make_intrusive<OpaqueType>("tlsh");
 
@@ -142,7 +82,13 @@ bool TLSHVal::DoFeed(const void* data, size_t size)
 	if ( ! IsValid() )
 		return false;
 
+	/*for (int i = 0; i < size; i++) {
+        fprintf(stderr, " %02x", ((u_char *) data)[i]);
+    }
+    fprintf(stderr, "\n");*/
+	//fprintf(stderr, "%s", data);
 	tlsh->update(static_cast<const u_char*>(data), size);
+
 	return IsValid();
 	}
 
@@ -155,4 +101,17 @@ StringValPtr TLSHVal::DoGet()
 	const char* hash = tlsh->getHash();
 	return make_intrusive<StringVal>(hash);
 	}
+
+IMPLEMENT_OPAQUE_VALUE(TLSHVal)
+
+std::optional<BrokerData> TLSHVal::DoSerializeData() const {
+	//TODO: Implement serialization
+	return std::nullopt;
+}
+
+bool TLSHVal::DoUnserializeData(BrokerDataView) {
+	//TODO: Impelment deserialization
+	return false;
+}
+
 }
