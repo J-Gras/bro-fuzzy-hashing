@@ -5,13 +5,13 @@ using namespace plugin::JGras_FuzzyHashing;
 %%}
 
 ## Constructs an ssdeep handle to enable incremental hash computation. You can
-## feed data to the returned opaque value with :bro:id:`ssdeep_hash_update` and
-## eventually need to call :bro:id:`ssdeep_hash_finish` to finish the
+## feed data to the returned opaque value with :zeek:id:`ssdeep_hash_update` and
+## eventually need to call :zeek:id:`ssdeep_hash_finish` to finish the
 ## computation and get the hash digest.
 ##
 ## Returns: The opaque handle associated with this hash computation.
 ##
-## .. bro:see:: ssdeep_hash_update ssdeep_hash_finish
+## .. zeek:see:: ssdeep_hash_update ssdeep_hash_finish
 ##
 function ssdeep_hash_init%(%): opaque of ssdeep
 	%{
@@ -21,7 +21,7 @@ function ssdeep_hash_init%(%): opaque of ssdeep
 	%}
 
 ## Updates the ssdeep value associated with a given index. It is required to
-## call :bro:id:`ssdeep_hash_init` once before calling this function.
+## call :zeek:id:`ssdeep_hash_init` once before calling this function.
 ##
 ## handle: The opaque handle associated with this hash computation.
 ##
@@ -29,7 +29,7 @@ function ssdeep_hash_init%(%): opaque of ssdeep
 ##
 ## Returns: True on success.
 ##
-## .. bro:see:: ssdeep_hash_init ssdeep_hash_finish
+## .. zeek:see:: ssdeep_hash_init ssdeep_hash_finish
 ##
 function ssdeep_hash_update%(handle: opaque of ssdeep, data: string%): bool
 	%{
@@ -43,7 +43,7 @@ function ssdeep_hash_update%(handle: opaque of ssdeep, data: string%): bool
 ##
 ## Returns: The hash value associated with the computation of *handle*.
 ##
-## .. bro:see:: ssdeep_hash_init ssdeep_hash_update
+## .. zeek:see:: ssdeep_hash_init ssdeep_hash_update
 ##
 function ssdeep_hash_finish%(handle: opaque of ssdeep%): string
 	%{
@@ -51,13 +51,13 @@ function ssdeep_hash_finish%(handle: opaque of ssdeep%): string
 	%}
 
 ## Constructs an tlsh handle to enable incremental hash computation. You can
-## feed data to the returned opaque value with :bro:id:`tlsh_hash_update` and
-## eventually need to call :bro:id:`tlsh_hash_finish` to finish the computation
+## feed data to the returned opaque value with :zeek:id:`tlsh_hash_update` and
+## eventually need to call :zeek:id:`tlsh_hash_finish` to finish the computation
 ## and get the hash digest.
 ##
 ## Returns: The opaque handle associated with this hash computation.
 ##
-## .. bro:see:: tlsh_hash_update tlsh_hash_finish
+## .. zeek:see:: tlsh_hash_update tlsh_hash_finish
 ##
 function tlsh_hash_init%(%): opaque of tlsh
 	%{
@@ -67,7 +67,7 @@ function tlsh_hash_init%(%): opaque of tlsh
 	%}
 
 ## Updates the tlsh value associated with a given index. It is required to
-## call :bro:id:`tlsh_hash_init` once before calling this function.
+## call :zeek:id:`tlsh_hash_init` once before calling this function.
 ##
 ## handle: The opaque handle associated with this hash computation.
 ##
@@ -75,7 +75,7 @@ function tlsh_hash_init%(%): opaque of tlsh
 ##
 ## Returns: True on success.
 ##
-## .. bro:see:: tlsh_hash_init tlsh_hash_finish
+## .. zeek:see:: tlsh_hash_init tlsh_hash_finish
 ##
 function tlsh_hash_update%(handle: opaque of tlsh, data: string%): bool
 	%{
@@ -89,7 +89,7 @@ function tlsh_hash_update%(handle: opaque of tlsh, data: string%): bool
 ##
 ## Returns: The hash value associated with the computation of *handle*.
 ##
-## .. bro:see:: tlsh_hash_init tlsh_hash_update
+## .. zeek:see:: tlsh_hash_init tlsh_hash_update
 ##
 function tlsh_hash_finish%(handle: opaque of tlsh%): string
 	%{
