@@ -1,6 +1,4 @@
-# @TEST-DOC: Test basic hash functions
-# @TEST-KNOWN-FAILURE This test currently fails due to a known issue in TLSH
-# (see https://github.com/trendmicro/tlsh/issues/151).
+# @TEST-DOC: Test basic hash functions with workaround for TLSH bug
 #
 # @TEST-EXEC: cp $FILES/CHANGES.bro-aux.txt .
 # @TEST-EXEC: zeek %INPUT > output
@@ -13,9 +11,22 @@ type Line: record {
 global ssdeep_handle: opaque of ssdeep;
 global tlsh_handle: opaque of tlsh;
 
+# Buffer to workaround 
+global tlsh_buf = "";
+global tlsh_acc = T;
+
 event read_event(description: Input::EventDescription, t: Input::Event, line: string) {
 	ssdeep_hash_update(ssdeep_handle, fmt("%s\n", line));
-	tlsh_hash_update(tlsh_handle, fmt("%s\n", line));
+	
+	tlsh_buf += fmt("%s\n", line);
+	if ( tlsh_acc && |tlsh_buf| < 50 )
+		# Keep accumulating inital buffer
+		return;
+	else
+		tlsh_acc = F;
+
+	tlsh_hash_update(tlsh_handle, tlsh_buf);
+	tlsh_buf = "";
 }
 
 event zeek_init()
