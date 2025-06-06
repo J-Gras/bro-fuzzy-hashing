@@ -114,4 +114,9 @@ bool TLSHVal::DoUnserializeData(BrokerDataView) {
 	return false;
 }
 
+int TLSHVal::TotalDiff(const TLSHVal* other, bool len_diff) {
+	auto other_tlsh = other->tlsh;
+	return tlsh->totalDiff(other_tlsh, len_diff);
+}
+
 }

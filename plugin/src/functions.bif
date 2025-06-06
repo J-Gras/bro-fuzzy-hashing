@@ -95,3 +95,24 @@ function tlsh_hash_finish%(handle: opaque of tlsh%): string
 	%{
 	return static_cast<FuzzyHashVal*>(handle)->Get();
 	%}
+
+## Calculate difference of two TLSH hashes.
+##
+## handle_a: The opaque handle for hash a.
+##
+## handle_b: The opaque handle for hash b.
+##
+## len_diff: If set to T, length will be included in the difference calculation.
+##
+## Returns: Score for the difference between the hashes of handle_a and handle_b.
+##
+## .. bro:see:: tlsh_hash_init
+##
+function tlsh_total_diff%(handle_a: opaque of tlsh, handle_b: opaque of tlsh, len_diff: bool &default=T%): int
+	%{
+	auto val_a = static_cast<TLSHVal*>(handle_a);
+	auto val_b = static_cast<TLSHVal*>(handle_b);
+
+	auto diff = val_a->TotalDiff(val_b, len_diff);
+	return zeek::val_mgr->Int(diff);
+	%}

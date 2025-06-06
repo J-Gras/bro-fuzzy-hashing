@@ -9,4 +9,5 @@ JGras::FuzzyHashing - Fuzzy hashing support for Zeek (dynamic, version)
     [Function] tlsh_hash_init
     [Function] tlsh_hash_update
     [Function] tlsh_hash_finish
+    [Function] tlsh_total_diff
 
