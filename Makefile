@@ -10,7 +10,7 @@ all: build-it
 build-it:
 	@test -e $(cmake_build_dir)/config.status || ./configure
 	-@test -e $(cmake_build_dir)/CMakeCache.txt && \
-      test $(cmake_build_dir)/CMakeCache.txt -ot `cat $(cmake_build_dir)/CMakeCache.txt | grep BRO_DIST | cut -d '=' -f 2`/build/CMakeCache.txt && \
+      test $(cmake_build_dir)/CMakeCache.txt -ot `cat $(cmake_build_dir)/CMakeCache.txt | grep ZEEK_DIST | cut -d '=' -f 2`/build/CMakeCache.txt && \
       echo Updating stale CMake cache && \
       touch $(cmake_build_dir)/CMakeCache.txt
 
@@ -26,4 +26,4 @@ distclean:
 	rm -rf $(cmake_build_dir)
 
 test:
-	make -C tests
+	@if [ -f build/lib/JGras-* ]; then make -C testing; else echo "Plugin not built."; fi

@@ -1,37 +1,50 @@
+# This file is maintained by zkg. Do not edit.
+# Put required additional cmake functionality into plugin.cmake.
+cmake_minimum_required(VERSION 3.15.0 FATAL_ERROR)
 
-cmake_minimum_required(VERSION 2.8)
+project(ZeekPluginFuzzyHashing)
 
-project(Plugin)
+# Establish version numbers in config.h
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/VERSION" VERSION LIMIT_COUNT 1)
 
-include(BroPlugin)
+string(REGEX REPLACE "[.-]" " " version_numbers ${VERSION})
+separate_arguments(version_numbers)
+list(GET version_numbers 0 VERSION_MAJOR)
+list(GET version_numbers 1 VERSION_MINOR)
+list(GET version_numbers 2 VERSION_PATCH)
 
-find_package(LibFuzzy)
-find_package(TLSH)
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/plugin/src/config.h.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/config.h" @ONLY)
 
-if ( SSDEEP_FOUND AND TLSH_FOUND )
-	message(STATUS "Libfuzzy (ssdeep) header prefix  : ${SSDEEP_INCLUDE_DIR}")
-	message(STATUS "Libfuzzy (ssdeep) library path   : ${SSDEEP_LIBRARY}")
-	message(STATUS "TLSH header prefix               : ${TLSH_INCLUDE_DIR}")
-	message(STATUS "TLSH library path                : ${TLSH_LIBRARY}")
+# Our plugin source and scripts are in a subdirectory
+set(BRO_PLUGIN_BASE "${CMAKE_CURRENT_SOURCE_DIR}/plugin")
 
-	include_directories(${SSDEEP_INCLUDE_DIR})
+# Workaround to make header files in plugin sources available to BiFs.
+include_directories("${BRO_PLUGIN_BASE}/src")
 
-	bro_plugin_begin(JGras FuzzyHashing)
-	bro_plugin_cc(src/Plugin.cc)
-	bro_plugin_cc(src/FuzzyHash.cc)
-	bro_plugin_cc(src/FuzzyHashVal.cc)
-	bro_plugin_bif(src/events.bif)
-	bro_plugin_bif(src/functions.bif)
-	bro_plugin_dist_files(README CHANGES COPYING VERSION)
-	bro_plugin_link_library(${SSDEEP_LIBRARY})
-	bro_plugin_link_library(${TLSH_LIBRARY})
-	bro_plugin_end()
-else ()
-	message(FATAL_ERROR "Build failed:")
-	if ( NOT SSDEEP_FOUND )
-		message(FATAL_ERROR "Libfuzzy (ssdeep) not found.")
-	endif ()
-	if ( NOT TLSH_FOUND )
-		message(FATAL_ERROR "TLSH not found.")
-	endif ()
+include(ZeekPlugin)
+
+zeek_plugin_begin(JGras FuzzyHashing)
+
+file(GLOB cc_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" "plugin/src/*.cc")
+foreach(file ${cc_files})
+    zeek_plugin_cc(${file})
+endforeach ()
+
+file(GLOB bif_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" "plugin/src/*.bif")
+foreach(file ${bif_files})
+    zeek_plugin_bif(${file})
+endforeach ()
+
+zeek_plugin_dist_files(README.md LICENSE VERSION)
+
+# Process any package-specific customizations
+include(plugin.cmake OPTIONAL)
+
+zeek_plugin_end()
+
+if ("${PROJECT_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
+    # Allows building rpm/deb packages via "make package" in build dir.
+    include(ConfigurePackaging)
+    #ConfigurePackaging(${VERSION})
 endif ()

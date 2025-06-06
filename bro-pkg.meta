@@ -1,8 +1,7 @@
 [package]
-description = This plugin provides fuzzy hashing for Bro.
+description = This plugin provides fuzzy hashing for Zeek.
 tags = fuzzy hashing, ssdeep, TLSH
 plugin_dir = build/JGras_FuzzyHashing.tgz
-build_command = ./configure --bro-dist=%(bro_dist)s && make
-test_command = cd tests && btest -d
-depends =
-  bro >=2.5.0
+script_dir = scripts
+build_command = ./configure && cmake --build build
+test_command = cd testing && btest -c btest.cfg

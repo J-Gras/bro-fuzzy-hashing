@@ -3,8 +3,8 @@
 # Variables used by this module, they can change the default behaviour and need
 # to be set before calling find_package:
 #
-#  TLSH_INCLUDE_DIR     Set this variable to the root directory of TLSH if the
-#                       module has problems finding the proper path.
+#  TLSH_ROOT_DIR     Set this variable to the root directory of TLSH if the
+#                    module has problems finding the proper path.
 #
 # Variables defined by this module:
 #
@@ -13,13 +13,13 @@
 #  TLSH_INCLUDE_DIR    The location of TLSH headers
 
 find_library(TLSH_LIBRARY
-    NAMES libtlsh.so
-    HINTS lib64
+    NAMES tlsh
+    HINTS ${TLSH_ROOT_DIR}/lib ${TLSH_ROOT_DIR}/lib64
 )
 
 find_path(TLSH_INCLUDE_DIR
     NAMES tlsh.h
-    HINTS include
+    HINTS ${TLSH_ROOT_DIR}/include
     PATH_SUFFIXES tlsh
 )
 
