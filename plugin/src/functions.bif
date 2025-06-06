@@ -96,6 +96,23 @@ function tlsh_hash_finish%(handle: opaque of tlsh%): string
 	return static_cast<FuzzyHashVal*>(handle)->Get();
 	%}
 
+## Sets the digest to the provided TLSH hash value.
+##
+## handle: The opaque handle associated with the hash computation.
+##
+## tlsh_hash: The string value to set the hash to.
+##
+## Returns: True, if the provided string is a valid TLSH hash.
+##
+## .. bro:see:: tlsh_hash_init
+##
+function tlsh_from_string%(handle: opaque of tlsh, tlsh_hash: string%): bool
+	%{
+	auto digest = static_cast<TLSHVal*>(handle);
+	auto valid = digest->SetHash(tlsh_hash->CheckString());
+	return zeek::val_mgr->Bool(valid);
+	%}
+
 ## Calculate difference of two TLSH hashes.
 ##
 ## handle_a: The opaque handle for hash a.

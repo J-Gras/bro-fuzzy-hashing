@@ -70,6 +70,11 @@ TLSHVal::TLSHVal() : FuzzyHashVal(tlsh_type)
 	{
 	}
 
+bool TLSHVal::SetHash(const char* hash_val)
+	{
+	return tlsh->fromTlshStr(hash_val) == 0;
+	}
+
 bool TLSHVal::DoInit()
 	{
 	assert(! IsValid());

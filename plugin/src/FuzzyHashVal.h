@@ -41,6 +41,7 @@ public:
 	//static void digest(val_list& vlist, u_char result[MD5_DIGEST_LENGTH]);
 
 	TLSHVal();
+	bool SetHash(const char* hash_val);
 	int TotalDiff(const TLSHVal* other, bool len_diff);
 
 protected:
