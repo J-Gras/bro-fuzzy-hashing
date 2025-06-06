@@ -1,5 +1,5 @@
-# @TEST-EXEC: bro -r $TRACES/http-get-large.pcap %INPUT | sort -r > output
-# @TEST-EXEC: bro -r $TRACES/http-get-large-incomplete.pcap %INPUT | sort -r >> output
+# @TEST-EXEC: zeek -r $TRACES/http-get-large.pcap %INPUT | sort -r > output
+# @TEST-EXEC: zeek -r $TRACES/http-get-large-incomplete.pcap %INPUT | sort -r >> output
 # @TEST-EXEC: btest-diff output
 
 event file_sniff(f: fa_file, meta: fa_metadata)

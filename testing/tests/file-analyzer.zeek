@@ -1,5 +1,6 @@
-# @TEST-EXEC: bro -r $TRACES/http-get.pcap %INPUT > output
-# TEST-EXEC: cat reporter.log >> output
+# @TEST-DOC: Test fuzzy hash file analyzers
+#
+# @TEST-EXEC: zeek -Cr $TRACES/http-get.pcap %INPUT | sort -r > output
 # @TEST-EXEC: btest-diff output
 
 event file_sniff(f: fa_file, meta: fa_metadata)

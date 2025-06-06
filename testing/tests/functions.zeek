@@ -1,5 +1,7 @@
-# @TEST-EXEC: cp $TRACES/CHANGES.bro-aux.txt .
-# @TEST-EXEC: bro %INPUT > output
+# @TEST-DOC: Test basic hash functions
+#
+# @TEST-EXEC: cp $FILES/CHANGES.bro-aux.txt .
+# @TEST-EXEC: zeek %INPUT > output
 # @TEST-EXEC: btest-diff output
 
 type Line: record {
@@ -14,7 +16,7 @@ event read_event(description: Input::EventDescription, t: Input::Event, line: st
 	tlsh_hash_update(tlsh_handle, fmt("%s\n", line));
 }
 
-event bro_init()
+event zeek_init()
 	{
 	ssdeep_handle = ssdeep_hash_init();
 	tlsh_handle = tlsh_hash_init();
@@ -25,7 +27,6 @@ event bro_init()
 		$name="test",
 		$fields=Line,
 		$want_record=F,
-		$fields=Line,
 		$ev=read_event]);
 	}
 
