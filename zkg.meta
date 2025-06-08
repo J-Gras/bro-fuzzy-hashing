@@ -3,5 +3,10 @@ description = This plugin provides fuzzy hashing for Zeek.
 tags = fuzzy hashing, ssdeep, TLSH
 plugin_dir = build/JGras_FuzzyHashing.tgz
 script_dir = scripts
-build_command = ./configure && cmake --build build
-test_command = cd testing && btest -c btest.cfg
+build_command = make
+test_command = make test
+depends =
+	zeek >=7.0.0
+external_depends =
+	libfuzzy-dev
+	libtlsh-dev
